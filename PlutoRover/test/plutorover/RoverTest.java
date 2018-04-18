@@ -2,6 +2,7 @@
  */
 package plutorover;
 
+import Exceptions.InvalidMovementException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -15,130 +16,227 @@ import static org.junit.Assert.*;
  */
 public class RoverTest {
     
-    public RoverTest() {
-    }
+    private Rover rover;
+    private Planet planet;
     
-    @BeforeClass
-    public static void setUpClass() {
-    }
+    /**
+     * TESTS LEFT TO DO
+     * - LOGIC FOR COLLISIONS
+     */
     
-    @AfterClass
-    public static void tearDownClass() {
-    }
+    
     
     @Before
     public void setUp() {
+        rover = new Rover();
+        planet = new Planet();
+        rover.setPlanet(planet);
     }
     
-    @After
+    @After //garbage collector should get all of these
     public void tearDown() {
     }
+
+    /**
+     * Test of process method, of class Rover.
+     * Can only test for failure, success was tested via debugger
+     */
+    @Test(expected=InvalidMovementException.class)
+    public void testProcess() throws Exception {
+        System.out.println("process");
+        char command = 'M';
+        rover.process(command);
+    }
+    
 
     /**
      * Test of move method, of class Rover.
      */
     @Test
-    public void testMove() {
+    public void testMove1() throws Exception {
         System.out.println("move");
-        char moveCommand = ' ';
-        Rover instance = new Rover();
-        instance.move(moveCommand);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        char moveCommand = 'F';
+        rover.move(moveCommand);
+        assertEquals(1, rover.getY());
     }
-
+    
     /**
-     * Test of turn method, of class Rover.
+     * Test of move method, of class Rover.
      */
     @Test
-    public void testTurn() {
+    public void testMove2() throws Exception {
+        System.out.println("move");
+        char moveCommand = 'B';
+        rover.move(moveCommand);
+        assertEquals(9, rover.getY());
+    }
+    
+    /**
+     * Test of move method, of class Rover.
+     */
+    @Test(expected=InvalidMovementException.class)
+    public void testMoveFail() throws Exception {
+        System.out.println("move");
+        char moveCommand = 'G';
+        rover.move(moveCommand);
+    }
+    
+    
+
+    /**
+     * Test of turn method, specifically self-looping behaviour
+     */
+    @Test
+    public void testTurn1() throws Exception {
         System.out.println("turn");
-        char turnCommand = ' ';
-        Rover instance = new Rover();
-        instance.turn(turnCommand);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        char turnCommand = 'L';
+        rover.turn(turnCommand);
+        rover.turn(turnCommand);
+        Rover.Heading expt = Rover.Heading.SOUTH;
+        assertEquals(expt, rover.getDir());
     }
-
+    
     /**
-     * Test of getX method, of class Rover.
+     * Test of turn method, specifically secondary self-looping behaviour
      */
     @Test
-    public void testGetX() {
-        System.out.println("getX");
-        Rover instance = new Rover();
-        int expResult = 0;
-        int result = instance.getX();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testTurn2() throws Exception {
+        System.out.println("turn");
+        char turnCommandA = 'L';
+        char turnCommandB = 'R';
+        rover.turn(turnCommandA);
+        rover.turn(turnCommandA);
+        rover.turn(turnCommandB);
+        rover.turn(turnCommandB);
+        rover.turn(turnCommandB);
+        Rover.Heading expt = Rover.Heading.EAST;
+        assertEquals(expt, rover.getDir());
     }
-
+    
     /**
-     * Test of getY method, of class Rover.
+     * Tests a 360 loop of directions
      */
     @Test
-    public void testGetY() {
-        System.out.println("getY");
-        Rover instance = new Rover();
-        int expResult = 0;
-        int result = instance.getY();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testTurn3() throws Exception {
+        System.out.println("turn");
+        char turnCommandA = 'L';
+        rover.turn(turnCommandA);
+        rover.turn(turnCommandA);
+        rover.turn(turnCommandA);
+        rover.turn(turnCommandA);
+        Rover.Heading expt = Rover.Heading.NORTH;
+        assertEquals(expt, rover.getDir());
     }
-
+    
     /**
-     * Test of getDir method, of class Rover.
+     * Tests a 360 loop of directions
      */
     @Test
-    public void testGetDir() {
-        System.out.println("getDir");
-        Rover instance = new Rover();
-        Rover.Heading expResult = null;
-        Rover.Heading result = instance.getDir();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testTurn4() throws Exception {
+        System.out.println("turn");
+        char turnCommandA = 'R';
+        rover.turn(turnCommandA);
+        rover.turn(turnCommandA);
+        rover.turn(turnCommandA);
+        rover.turn(turnCommandA);
+        Rover.Heading expt = Rover.Heading.NORTH;
+        assertEquals(expt, rover.getDir());
     }
-
+    
+    /**
+     * 
+     * @throws Exception 
+     */
+    @Test(expected=InvalidMovementException.class)
+    public void testTurnFail() throws Exception {
+        System.out.println("turn");
+        char turnCommandA = 'E';
+        rover.turn(turnCommandA);
+    }
+    /**
+     * Tests Movement System in tandem inc. looping
+     */
+    @Test
+    public void testMovementTandem() throws Exception {
+        Planet planet2 = new Planet(4, 4);
+        rover.setPlanet(planet2);
+        System.out.println("movement");
+        char turnCommand = 'R';
+        char moveCommandA = 'F';
+        rover.move(moveCommandA);
+        rover.move(moveCommandA);
+        rover.move(moveCommandA);
+        rover.move(moveCommandA);
+        rover.turn(turnCommand);
+        rover.turn(turnCommand);
+        rover.turn(turnCommand);
+        rover.turn(turnCommand);
+        rover.turn(turnCommand);
+        rover.move(moveCommandA);
+        String expt = "1, 0, E";
+        assertEquals(expt, rover.toString());
+    }
+    
+    @Test
+    public void testCollision(){
+        System.out.println("collision");
+        
+    }
+    
     /**
      * Test of setX method, of class Rover.
      */
     @Test
-    public void testSetX() {
+    public void testSetGetX() {
         System.out.println("setX");
-        int x = 0;
-        Rover instance = new Rover();
-        instance.setX(x);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        int x = 5;
+        rover.setX(x);
+        assertEquals(x, rover.getX());
     }
-
+    
     /**
      * Test of setY method, of class Rover.
      */
     @Test
-    public void testSetY() {
+    public void testSetGetY() {
         System.out.println("setY");
-        int y = 0;
-        Rover instance = new Rover();
-        instance.setY(y);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        int y = 5;
+        rover.setY(y);
+        assertEquals(y, rover.getY());
     }
 
     /**
      * Test of setDir method, of class Rover.
      */
     @Test
-    public void testSetDir() {
-        System.out.println("setDir");
-        Rover.Heading dir = null;
-        Rover instance = new Rover();
-        instance.setDir(dir);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testSetGetDir_RoverHeading() {
+        System.out.println("setDir/getDir (Heading)");
+        Rover.Heading dir = Rover.Heading.WEST;
+        rover.setDir(dir);
+        assertEquals(dir, rover.getDir());
+    }
+
+    /**
+     * Test of setDir method, of class Rover.
+     */
+    @Test
+    public void testSetGetDir_char() throws Exception {
+        System.out.println("setDir/getDir (char)");
+        char dir = 'S';
+        rover.setDir(dir);
+        assertEquals(dir, rover.getDir().getDir());
+    }
+
+    /**
+     * Test accessor methods for Planet, of class Rover.
+     */
+    @Test
+    public void testSetGetPlanet() {
+        System.out.println("setPlanet/getPlanet");
+        Planet planet = new Planet();
+        rover.setPlanet(planet);
+        Planet planet2 = rover.getPlanet();
+        assertEquals(planet, planet2);
     }
 
     /**
@@ -147,12 +245,9 @@ public class RoverTest {
     @Test
     public void testToString() {
         System.out.println("toString");
-        Rover instance = new Rover();
-        String expResult = "";
-        String result = instance.toString();
+        String expResult = "0, 0, N";
+        String result = rover.toString();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
     }
     
 }

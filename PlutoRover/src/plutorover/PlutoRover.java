@@ -22,6 +22,9 @@ public class PlutoRover {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         Rover rover = new Rover();
+        Planet planet = new Planet();
+        rover.setPlanet(planet);
+        planet.placeObstacle(4, 4);
         String input = "";
         while (!input.equals("E")) {
             try {

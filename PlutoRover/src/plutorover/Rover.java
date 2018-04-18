@@ -44,7 +44,7 @@ public class Rover {
             else{
                 return headings[this.ordinal()-1]; //need to make sure it's never <0, test for this
             }*/ //just in case this doesn't work...
-            int pos = this.ordinal() - 1 % headings.length;
+            int pos = (this.ordinal() - 1) % headings.length;
             return pos < 0 ? headings[pos + headings.length] : headings[pos];
         }
 
@@ -103,14 +103,49 @@ public class Rover {
     //actual movement methods
     
     public void move(char moveCommand) throws InvalidMovementException {
+        int newX, newY;
         switch (moveCommand) {
             case 'F':
+                /*
                 this.x += dir.getForwardX();
                 this.y += dir.getForwardY();
+                this.x = this.x % planet.getWidth();
+                this.y = this.y % planet.getHeight();*/
+                newX = (this.x + dir.getForwardX()) % planet.getWidth();
+                newY = (this.y + dir.getForwardY()) % planet.getHeight();
+                //negative bound checking, albeit inelegant
+                if(newX < 0){
+                    newX += planet.getWidth();
+                }
+                if(newY < 0){
+                    newY += planet.getHeight();
+                }
+                
+                if(!planet.isObstacle(newX, newY)){ //could spin this off into new method, but it wouldn't massively reduce code
+                    this.x = newX;
+                    this.y = newY;
+                }
+                
                 break;
             case 'B':
+                /*
                 this.x -= dir.getForwardX();
                 this.y -= dir.getForwardY();
+                this.x = this.x % planet.getWidth();
+                this.y = this.y % planet.getHeight();*/
+                newX = (this.x - dir.getForwardX()) % planet.getWidth();
+                newY = (this.y - dir.getForwardY()) % planet.getHeight();
+                if(newX < 0){
+                    newX += planet.getWidth();
+                }
+                if(newY < 0){
+                    newY += planet.getHeight();
+                }
+                if(!planet.isObstacle(newX, newY)){
+                    this.x = newX;
+                    this.y = newY;
+                }
+                
                 break;
             default:
                 throw new InvalidMovementException(moveCommand);
@@ -206,6 +241,10 @@ public class Rover {
             default:
                 throw new InvalidMovementException(dir);
         }
+    }
+    
+    public void setPlanet(Planet planet){
+        this.planet = planet;
     }
 
     @Override
