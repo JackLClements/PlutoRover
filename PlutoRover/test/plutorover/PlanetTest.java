@@ -14,82 +14,49 @@ import static org.junit.Assert.*;
  * @author Jack L. Clements
  */
 public class PlanetTest {
-    
-    public PlanetTest() {
-    }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
+    private Planet planet;
     
     @Before
     public void setUp() {
+        planet = new Planet();
     }
     
     @After
-    public void tearDown() {
+    public void tearDown() { 
     }
 
     /**
-     * Test of placeObstacle method, of class Planet.
+     * Test placement and checking of obstacle methods, of class Planet.
      */
     @Test
-    public void testPlaceObstacle() {
+    public void testObstacles() {
         System.out.println("placeObstacle");
-        int x = 0;
-        int y = 0;
-        Planet instance = new Planet();
-        instance.placeObstacle(x, y);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of isObstacle method, of class Planet.
-     */
-    @Test
-    public void testIsObstacle() {
-        System.out.println("isObstacle");
-        int x = 0;
-        int y = 0;
-        Planet instance = new Planet();
-        boolean expResult = false;
-        boolean result = instance.isObstacle(x, y);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        int x = 2;
+        int y = 3;
+        planet.placeObstacle(x, y);
+        assertTrue(planet.isObstacle(2, 3));
     }
 
     /**
      * Test of getHeight method, of class Planet.
      */
     @Test
-    public void testGetHeight() {
-        System.out.println("getHeight");
-        Planet instance = new Planet();
-        int expResult = 0;
-        int result = instance.getHeight();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testSetGetHeight() {
+        System.out.println("height");
+        planet.setHeight(15);
+        int result = planet.getHeight();
+        assertEquals(15, result);
     }
 
     /**
      * Test of getWidth method, of class Planet.
      */
     @Test
-    public void testGetWidth() {
+    public void testSetGetWidth() {
         System.out.println("getWidth");
-        Planet instance = new Planet();
-        int expResult = 0;
-        int result = instance.getWidth();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        planet.setWidth(102);
+        int result = planet.getWidth();
+        assertEquals(102, result);
     }
     
 }
