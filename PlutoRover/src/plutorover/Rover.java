@@ -29,8 +29,8 @@ public class Rover {
     public static enum Heading {
         NORTH('N', 0, 1), EAST('E', 1, 0), SOUTH('S', 0, -1), WEST('W', -1, 0); //ordering of elements is important
         final char headingAngle;
-        final int forwardX, forwardY;
-        private static Heading[] headings = values();
+        final int forwardX, forwardY; //direction vector for heading 
+        private static Heading[] headings = values(); //all possible values of enum type
         
         /**
          * Value based constructor, only ever used by the program.
@@ -94,6 +94,7 @@ public class Rover {
         this.x = 0;
         this.y = 0;
         this.dir = Heading.NORTH;
+        this.planet = null; //must be setup manually via setter
     }
     
     /**
@@ -101,11 +102,21 @@ public class Rover {
      * @param x Column location of object
      * @param y Row location of object
      * @param dir Heading of object
+     * @param planet Planet object
      */
-    public Rover(int x, int y, Heading dir) {
+    public Rover(int x, int y, Heading dir, Planet planet){
         this.x = x;
         this.y = y;
         this.dir = dir;
+        this.planet = planet;
+        
+        //Validate potential out of bounds values passed to constructor
+        int width = planet.getWidth();
+        int height = planet.getHeight();
+        this.x = this.x<0 ? (x%width)+width : this.x;
+        this.y = this.y<0 ? (y%height)+height : this.y;
+        this.x = this.x > width ? this.x%width : this.x;
+        this.y = this.y > height ? this.y%height : this.y;
     }
 
     //Mutator Methods
@@ -125,7 +136,7 @@ public class Rover {
             case 'R':
                 turn(command);
                 break;
-            case 'E': //put in to handle manual/console input
+            case 'E': //only put in to handle manual/console input
                 break;
             default:
                 throw new InvalidMovementException(command);
@@ -271,7 +282,7 @@ public class Rover {
     /**
      * Sets direction field based on given character
      * @param dir
-     * @throws InvalidMovementException when given value outside of
+     * @throws InvalidHeaderException when given value outside of
      */
     public void setDir(char dir) throws InvalidHeaderException {
         switch (dir) {

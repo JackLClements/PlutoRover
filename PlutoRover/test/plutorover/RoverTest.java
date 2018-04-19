@@ -231,6 +231,28 @@ public class RoverTest {
         assertEquals("1, 2, E", rover.toString());
     }
     
+    /**
+     * Test that a Rover object cannot spawn in negative co-ordinates on a planet
+     */
+    @Test
+    public void testInitialWrappingTest(){
+        System.out.println("initial wrapping");
+        Planet planet2 = new Planet();
+        Rover init = new Rover(-5, -3, Rover.Heading.NORTH, planet2);
+        assertEquals("5, 7, N", init.toString());
+    }
+    
+    /**
+     * Test that a Rover object cannot spawn in too high co-ordinates on a planet
+     */
+    @Test
+    public void testInitialWrappingTest2(){
+        System.out.println("initial wrapping");
+        Planet planet2 = new Planet();
+        Rover init = new Rover(11, 15, Rover.Heading.NORTH, planet2);
+        assertEquals("1, 5, N", init.toString());
+    }
+    
     //Accessor tests
     
     /**

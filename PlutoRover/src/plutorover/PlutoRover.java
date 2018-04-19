@@ -10,13 +10,9 @@ import java.util.Scanner;
  * @author Jack L. Clements
  */
 public class PlutoRover {
-
-    /*
-    Notes -
-    - Use test driven development, think about coverage, pass/fail cases, etc.
-    - Implement as efficiently as possible
-     */
     /**
+     * Main class literally only used to test scenarios that Unit Testing could not catch
+     * Mostly black box tests
      * @param args the command line arguments
      */
     public static void main(String[] args) {
