@@ -82,11 +82,19 @@ public class Planet {
     }
     
     /**
+     * 
+     */
+    public boolean [][] getObstacles(){
+        return this.obstacles;
+    }
+    
+    /**
      * Sets planet height
      * @param height 
      */
     public void setHeight(int height){
         this.height = height;
+        this.obstacles = new boolean [height][this.width];
     }
     
     /**
@@ -95,5 +103,6 @@ public class Planet {
      */
     public void setWidth(int width){
         this.width = width;
+        this.obstacles = new boolean [this.height][width];
     }
 }

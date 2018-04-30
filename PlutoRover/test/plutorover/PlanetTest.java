@@ -59,4 +59,19 @@ public class PlanetTest {
         assertEquals(102, result);
     }
     
+    /**
+     * Test of setWidth method, checks that array is properly resized
+     */
+    @Test
+    public void testGetObstacles(){
+        System.out.println("getObstacles");
+        planet.setWidth(98);
+        planet.setHeight(8);
+        boolean [][] planetArray = planet.getObstacles();
+        assertEquals(8, planetArray.length); //is this bad practice? 
+        assertEquals(98, planetArray[0].length);
+        
+    }
+    
+    
 }
